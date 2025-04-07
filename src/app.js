@@ -2,16 +2,20 @@ const express = require('express');
 
 const app = express();
 
-app.use('/Documents', (req,res) => {
-    res.send("This is the Document Page!!");
+app.get("/test",(req,res) =>{
+    res.send("GETing...");
 })
 
-app.use("/Locker",(req,res) => {
-    res.send("This is the Shocker");
+app.post("/test",(req,res) =>{
+    res.send("POSTing...")
 })
 
-app.use("/",(req,res) => {
-    res.send("Hello everyone!! This is Raj");
+app.patch("/test",(req,res)=>{
+    res.send("PATCHing...");
+})
+
+app.delete("/test",(req,res)=>{
+    res.send("DELETEing...");
 })
 
 app.listen(1010);
