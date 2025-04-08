@@ -2,29 +2,20 @@ const express = require('express');
 
 const app = express();
 
-app.use("/user", (req,res,next)=>{
-    console.log("1st Respond...");
-    next();
+const { adminAuth, userAuth } = require('./middleware/auth');
+
+app.use("/admin", adminAuth);
+
+app.use("/user/patchData", userAuth, (req,res)=>{
+    res.send("Successfully patched...");
 })
 
-app.use("/user",(req,res,next)=>{
-    console.log("2nd Respond...");
-    next();
+app.get("/admin/getData",(req,res)=>{
+    res.send("Data received successfully...");
 })
 
-app.use("/user", (req,res,next)=>{
-    console.log("3rd Respond...");
-    next();
-})
-
-app.use("/user", (req,res,next)=>{
-    console.log("4th Respond...");
-    next();
-})
-
-app.use("/user", (req,res)=>{
-    console.log("5th Respond...");
-    res.send("5th response...");
+app.get("/admin/update",(req,res)=>{
+    res.send("Profile updated successfully...");
 })
 
 app.listen(1010);
