@@ -2,20 +2,29 @@ const express = require('express');
 
 const app = express();
 
-app.get("/test",(req,res) =>{
-    res.send("GETing...");
+app.use("/user", (req,res,next)=>{
+    console.log("1st Respond...");
+    next();
 })
 
-app.post("/test",(req,res) =>{
-    res.send("POSTing...")
+app.use("/user",(req,res,next)=>{
+    console.log("2nd Respond...");
+    next();
 })
 
-app.patch("/test",(req,res)=>{
-    res.send("PATCHing...");
+app.use("/user", (req,res,next)=>{
+    console.log("3rd Respond...");
+    next();
 })
 
-app.delete("/test",(req,res)=>{
-    res.send("DELETEing...");
+app.use("/user", (req,res,next)=>{
+    console.log("4th Respond...");
+    next();
+})
+
+app.use("/user", (req,res)=>{
+    console.log("5th Respond...");
+    res.send("5th response...");
 })
 
 app.listen(1010);
