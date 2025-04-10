@@ -5,6 +5,29 @@ const app = express();
 
 app.use(express.json()); //middleware for converting json into JS object...
 
+app.get("/user", async (req, res) => {
+    try{
+        const user = await User.find({email: req.body.email});
+        if(user.length === 0)
+            res.status(404).send("User not found...");
+        else   
+            res.send(user);
+    }
+    catch(err){
+        res.send("Something went wrong!!!");
+    }
+});
+
+app.get("/feed", async (req,res) =>{
+    try{
+        const users = await User.find({});
+        res.send(users);
+    }
+    catch(err){
+        res.send("Something went wrong!!!");
+    }
+});
+
 app.post("/signup", async (req, res) => {
 
     const user = new User(req.body); //Dynamic way of getting input from user...
@@ -15,7 +38,7 @@ app.post("/signup", async (req, res) => {
     } catch {
         res.status(400).send("Bad request...");
     }
-})
+});
 
 connectDB()
     .then(() => {
