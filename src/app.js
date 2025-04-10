@@ -7,7 +7,7 @@ app.use(express.json()); //middleware for converting json into JS object...
 
 app.get("/user", async (req, res) => {
     try{
-        const user = await User.find({email: req.body.email});
+        const user = await User.findById(req.body.id);
         if(user.length === 0)
             res.status(404).send("User not found...");
         else   
@@ -37,6 +37,16 @@ app.post("/signup", async (req, res) => {
         res.send("New user is created successfully...");
     } catch {
         res.status(400).send("Bad request...");
+    }
+});
+
+app.delete("/user", async (req,res)=>{
+    try{
+        const user = await User.findByIdAndDelete(req.body.id);
+        res.send("User is deleted successfully...");
+    }
+    catch(err){
+        res.send("Something went wrong!!!");
     }
 });
 
