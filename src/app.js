@@ -50,6 +50,16 @@ app.delete("/user", async (req,res)=>{
     }
 });
 
+app.patch("/user", async (req,res) =>{
+    try{
+        const user = await User.findOneAndUpdate({email: req.body.email}, req.body,{returnDocument: 'after'});
+        res.send(user);
+    }
+    catch(err){
+        res.status(400).send("Something went wrong!!!");
+    }
+});
+
 connectDB()
     .then(() => {
         console.log("Database connection is established...");
