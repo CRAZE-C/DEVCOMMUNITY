@@ -6,24 +6,24 @@ const app = express();
 app.use(express.json()); //middleware for converting json into JS object...
 
 app.get("/user", async (req, res) => {
-    try{
+    try {
         const user = await User.findById(req.body.id);
-        if(user.length === 0)
+        if (user.length === 0)
             res.status(404).send("User not found...");
-        else   
+        else
             res.send(user);
     }
-    catch(err){
+    catch (err) {
         res.send("Something went wrong!!!");
     }
 });
 
-app.get("/feed", async (req,res) =>{
-    try{
+app.get("/feed", async (req, res) => {
+    try {
         const users = await User.find({});
         res.send(users);
     }
-    catch(err){
+    catch (err) {
         res.send("Something went wrong!!!");
     }
 });
@@ -35,27 +35,29 @@ app.post("/signup", async (req, res) => {
     try {
         await user.save();
         res.send("New user is created successfully...");
-    } catch {
-        res.status(400).send("Bad request...");
+    } catch(err) {
+        res.status(400).send("Bad request..." + err.message);
     }
 });
 
-app.delete("/user", async (req,res)=>{
-    try{
+app.delete("/user", async (req, res) => {
+    try {
         const user = await User.findByIdAndDelete(req.body.id);
         res.send("User is deleted successfully...");
     }
-    catch(err){
+    catch (err) {
         res.send("Something went wrong!!!");
     }
 });
 
-app.patch("/user", async (req,res) =>{
-    try{
-        const user = await User.findOneAndUpdate({email: req.body.email}, req.body,{returnDocument: 'after'});
+app.patch("/user", async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { email: req.body.email }, req.body, 
+            { returnDocument: 'after', runValidators: true });
         res.send(user);
     }
-    catch(err){
+    catch (err) {
         res.status(400).send("Something went wrong!!!");
     }
 });
