@@ -1,6 +1,8 @@
 const express = require('express');
 const { connectDB } = require('./config/database');
 const User = require('./models/user');
+const {signupValidation} = require('./utils/validation');
+const bcrypt = require('bcrypt');
 const app = express();
 
 app.use(express.json()); //middleware for converting json into JS object...
@@ -30,12 +32,29 @@ app.get("/feed", async (req, res) => {
 
 app.post("/signup", async (req, res) => {
 
-    const user = new User(req.body); //Dynamic way of getting input from user...
+//  const user = new User(req.body); //Dynamic way of getting input from user...
 
     try {
-        await user.save();
+        // 1. validation
+        signupValidation(req); 
+
+        const {firstName, lastName, email, password} = req.body;
+
+        // 2. Encryption
+        const encryptedPass = await bcrypt.hash(password, 10); 
+
+        // 3. Save to DB
+        const user = new User({
+            firstName,
+            lastName,
+            email,
+            password: encryptedPass
+        });
+        await user.save(); 
+
         res.send("New user is created successfully...");
-    } catch(err) {
+    } 
+    catch(err) {
         res.status(400).send("Bad request..." + err.message);
     }
 });

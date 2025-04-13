@@ -31,31 +31,26 @@ const userSchema = new Schema({
             if (!["male", "female", "other"].includes(value)) {
                 throw new Error('Invalid gender');
             }
-        },
-        required: true
+        }
     },
     age: {
         type: Number,
         min: 18,
         max:100,
-        required: true
     },
     phoneNumber: {
         type: String,
-        validate: [validator.isMobilePhone,"Enter a valid MobilePhone number!!!"],
-        required: true
+        validate: [validator.isMobilePhone,"Enter a valid MobilePhone number!!!"]
     },
     about: {
         type: String,
         minLength: 10,
         maxLength: 50,
-        defualt: "Add about yourself...",
+        default: "Add about yourself...",
         trim: true
     },
     password: {
         type: String,
-        minLength: 8,
-        maxLength: 15,
         validate: [validator.isStrongPassword, 'Password should contain at least one lowercase letter, one uppercase letter, one digit and one special character'],
         required: true
     },
@@ -74,11 +69,10 @@ const userSchema = new Schema({
         },
         set: function (value) {
             return value.map((item) => item.trim());
-        },
+        }
     },
     dob: {
         type: Date,
-        required: true
     },
     address: {
         type: String,
@@ -89,8 +83,7 @@ const userSchema = new Schema({
     jobRole: {
         type: String,
         default: "Add your jobRole here...",
-        maxLength: 50,
-        required: true
+        maxLength: 50
     }
 },{
     timestamps: true
