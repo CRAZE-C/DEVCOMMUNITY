@@ -1,7 +1,8 @@
 const express = require('express');
 const { connectDB } = require('./config/database');
 const User = require('./models/user');
-const {signupValidation} = require('./utils/validation');
+const { signupValidation } = require('./utils/validation');
+const { loginAuth } = require('./utils/loginAuth');
 const bcrypt = require('bcrypt');
 const app = express();
 
@@ -32,16 +33,16 @@ app.get("/feed", async (req, res) => {
 
 app.post("/signup", async (req, res) => {
 
-//  const user = new User(req.body); //Dynamic way of getting input from user...
+    //  const user = new User(req.body); //Dynamic way of getting input from user...
 
     try {
         // 1. validation
-        signupValidation(req); 
+        signupValidation(req);
 
-        const {firstName, lastName, email, password} = req.body;
+        const { firstName, lastName, email, password } = req.body;
 
         // 2. Encryption
-        const encryptedPass = await bcrypt.hash(password, 10); 
+        const encryptedPass = await bcrypt.hash(password, 10);
 
         // 3. Save to DB
         const user = new User({
@@ -50,14 +51,23 @@ app.post("/signup", async (req, res) => {
             email,
             password: encryptedPass
         });
-        await user.save(); 
+        await user.save();
 
         res.send("New user is created successfully...");
-    } 
-    catch(err) {
+    }
+    catch (err) {
         res.status(400).send("Bad request..." + err.message);
     }
 });
+
+app.post('/login', async (req, res) => {
+    try {
+        loginAuth(req,res);
+    }
+    catch (err) {
+        res.status(400).send(err.message);
+    }
+})
 
 app.delete("/user", async (req, res) => {
     try {
@@ -73,9 +83,9 @@ app.patch("/user/:userID", async (req, res) => {
     const userID = req.params?.userID;
     try {
         const data = req.body;
-        const Blocked_Updates = ["_id","email","age","phoneNumber","dob"];
+        const Blocked_Updates = ["_id", "email", "age", "phoneNumber", "dob"];
         const isBlocked = Object.keys(data).some((k) => Blocked_Updates.includes(k));
-        if(isBlocked)
+        if (isBlocked)
             throw new Error("This field cannot be updated!!!");
         const user = await User.findByIdAndUpdate(
             userID, data,
@@ -83,7 +93,7 @@ app.patch("/user/:userID", async (req, res) => {
         res.send(user);
     }
     catch (err) {
-        res.status(400).send("Error: "+err.message);
+        res.status(400).send("Error: " + err.message);
     }
 });
 
