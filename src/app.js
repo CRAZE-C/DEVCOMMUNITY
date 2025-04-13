@@ -50,15 +50,21 @@ app.delete("/user", async (req, res) => {
     }
 });
 
-app.patch("/user", async (req, res) => {
+app.patch("/user/:userID", async (req, res) => {
+    const userID = req.params?.userID;
     try {
-        const user = await User.findOneAndUpdate(
-            { email: req.body.email }, req.body, 
+        const data = req.body;
+        const Blocked_Updates = ["_id","email","age","phoneNumber","dob"];
+        const isBlocked = Object.keys(data).some((k) => Blocked_Updates.includes(k));
+        if(isBlocked)
+            throw new Error("This field cannot be updated!!!");
+        const user = await User.findByIdAndUpdate(
+            userID, data,
             { returnDocument: 'after', runValidators: true });
         res.send(user);
     }
     catch (err) {
-        res.status(400).send("Something went wrong!!!");
+        res.status(400).send("Error: "+err.message);
     }
 });
 
@@ -68,5 +74,5 @@ connectDB()
         app.listen(1010, console.log("Server is successfully listening on port 1010"));
     })
     .catch((err) => {
-        console.log("Database is failed to connect!!!");
+        console.log("Database connection failed!!!");
     });
