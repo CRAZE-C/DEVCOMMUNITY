@@ -4,9 +4,12 @@ const User = require('./models/user');
 const { signupValidation } = require('./utils/validation');
 const { loginAuth } = require('./utils/loginAuth');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const app = express();
 
 app.use(express.json()); //middleware for converting json into JS object...
+app.use(cookieParser()); //middleware for parsing cookies
 
 app.get("/user", async (req, res) => {
     try {
@@ -30,6 +33,28 @@ app.get("/feed", async (req, res) => {
         res.send("Something went wrong!!!");
     }
 });
+
+app.get('/profile', async (req,res) => {
+    try{
+        const cookies = req.cookies;
+       
+        const {token} = cookies;
+        console.log(token);
+        if(!token)
+            throw new Error("Invalid Token!!!");
+        const decodedUser = jwt.verify(token, 'DEV#Community');
+
+        const {_id} = decodedUser;
+
+        const user = await User.findById({_id});
+        if(!user)
+            throw new Error("User not found!!!");
+        res.send(user);
+    }
+    catch(err){
+        res.send("ERROR : "+ err.message);
+    }
+})
 
 app.post("/signup", async (req, res) => {
 
@@ -56,13 +81,13 @@ app.post("/signup", async (req, res) => {
         res.send("New user is created successfully...");
     }
     catch (err) {
-        res.status(400).send("Bad request..." + err.message);
+        res.status(400).send("ERROR : " + err.message);
     }
 });
 
 app.post('/login', async (req, res) => {
     try {
-        loginAuth(req,res);
+        await loginAuth(req,res);
     }
     catch (err) {
         res.status(400).send(err.message);
@@ -103,5 +128,5 @@ connectDB()
         app.listen(1010, console.log("Server is successfully listening on port 1010"));
     })
     .catch((err) => {
-        console.log("Database connection failed!!!");
+        console.log("Database connection failed!!!"+err.message);
     });
