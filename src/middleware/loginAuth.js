@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const loginAuth = async (req, res, next) => {
@@ -9,10 +7,10 @@ const loginAuth = async (req, res, next) => {
         const user = await User.findOne({ email: email });
         if (!user)
             throw new Error("Invalid credentials!!");
-        const isValid = await bcrypt.compare(password, user.password);
+        const isValid = await user.validatePassword(password);
         if (isValid) {
             // Create JWT token
-            const token = jwt.sign({ _id: user._id }, "DEV#Community", { expiresIn: 30 });
+            const token = await user.getJWT();
             if (!token) {
                 throw new Error("Token expired!!!");
             }

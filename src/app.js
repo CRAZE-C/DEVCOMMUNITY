@@ -3,7 +3,7 @@ const { connectDB } = require('./config/database');
 const User = require('./models/user');
 const { signupValidation } = require('./utils/validation');
 const { loginAuth } = require('./middleware/loginAuth');
-const {userAuth} = require('./middleware/userAuth');
+const { userAuth } = require('./middleware/userAuth');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -11,12 +11,21 @@ const app = express();
 app.use(express.json()); //middleware for converting json into JS object...
 app.use(cookieParser()); //middleware for parsing cookies
 
-app.get('/getProfile',userAuth, async (req, res) => {
+app.get('/getProfile', userAuth, async (req, res) => {
     try {
         res.send(req.user);
     }
     catch (err) {
         res.send("ERROR : " + err.message);
+    }
+})
+
+app.post('/sendConnectionReq', userAuth, async (req, res) => {
+    try {
+        res.send(req.user.firstName + "Sent a connection...");
+    }
+    catch (err) {
+        res.status(400).send("ERROR : " + err.message);
     }
 })
 
@@ -56,7 +65,7 @@ app.post('/login', loginAuth, async (req, res) => {
     catch (err) {
         res.status(400).send("ERROR : " + err.message);
     }
-})
+});
 
 connectDB()
     .then(() => {
