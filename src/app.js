@@ -2,57 +2,21 @@ const express = require('express');
 const { connectDB } = require('./config/database');
 const User = require('./models/user');
 const { signupValidation } = require('./utils/validation');
-const { loginAuth } = require('./utils/loginAuth');
+const { loginAuth } = require('./middleware/loginAuth');
+const {userAuth} = require('./middleware/userAuth');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
 const app = express();
 
 app.use(express.json()); //middleware for converting json into JS object...
 app.use(cookieParser()); //middleware for parsing cookies
 
-app.get("/user", async (req, res) => {
+app.get('/getProfile',userAuth, async (req, res) => {
     try {
-        const user = await User.findById(req.body.id);
-        if (user.length === 0)
-            res.status(404).send("User not found...");
-        else
-            res.send(user);
+        res.send(req.user);
     }
     catch (err) {
-        res.send("Something went wrong!!!");
-    }
-});
-
-app.get("/feed", async (req, res) => {
-    try {
-        const users = await User.find({});
-        res.send(users);
-    }
-    catch (err) {
-        res.send("Something went wrong!!!");
-    }
-});
-
-app.get('/profile', async (req,res) => {
-    try{
-        const cookies = req.cookies;
-       
-        const {token} = cookies;
-        console.log(token);
-        if(!token)
-            throw new Error("Invalid Token!!!");
-        const decodedUser = jwt.verify(token, 'DEV#Community');
-
-        const {_id} = decodedUser;
-
-        const user = await User.findById({_id});
-        if(!user)
-            throw new Error("User not found!!!");
-        res.send(user);
-    }
-    catch(err){
-        res.send("ERROR : "+ err.message);
+        res.send("ERROR : " + err.message);
     }
 })
 
@@ -85,42 +49,14 @@ app.post("/signup", async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', loginAuth, async (req, res) => {
     try {
-        await loginAuth(req,res);
+        res.send("Login successful!!!");
     }
     catch (err) {
-        res.status(400).send(err.message);
+        res.status(400).send("ERROR : " + err.message);
     }
 })
-
-app.delete("/user", async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.body.id);
-        res.send("User is deleted successfully...");
-    }
-    catch (err) {
-        res.send("Something went wrong!!!");
-    }
-});
-
-app.patch("/user/:userID", async (req, res) => {
-    const userID = req.params?.userID;
-    try {
-        const data = req.body;
-        const Blocked_Updates = ["_id", "email", "age", "phoneNumber", "dob"];
-        const isBlocked = Object.keys(data).some((k) => Blocked_Updates.includes(k));
-        if (isBlocked)
-            throw new Error("This field cannot be updated!!!");
-        const user = await User.findByIdAndUpdate(
-            userID, data,
-            { returnDocument: 'after', runValidators: true });
-        res.send(user);
-    }
-    catch (err) {
-        res.status(400).send("Error: " + err.message);
-    }
-});
 
 connectDB()
     .then(() => {
@@ -128,5 +64,5 @@ connectDB()
         app.listen(1010, console.log("Server is successfully listening on port 1010"));
     })
     .catch((err) => {
-        console.log("Database connection failed!!!"+err.message);
+        console.log("Database connection failed!!!" + err.message);
     });
