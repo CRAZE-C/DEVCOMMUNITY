@@ -92,7 +92,7 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.getJWT = function () {
-    return jwt.sign({ _id: this._id }, "DEV#Community", { expiresIn: "7d" });
+    return jwt.sign({ _id: this._id }, "DEV#Community", { expiresIn:'7d'});
 }
 
 userSchema.methods.validatePassword = async function (passwordInputByUser) {

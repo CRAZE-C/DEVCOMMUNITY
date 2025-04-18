@@ -15,7 +15,7 @@ const loginAuth = async (req, res, next) => {
                 throw new Error("Token expired!!!");
             }
             // Add the token to the cookie and send it back to the user
-            res.cookie('token', token, { expires: new Date(Date.now() + 8 * 3600000) });
+            res.cookie('token', token, { expires: new Date(Date.now() + 3600000) }); //maxAge: 3600000(only accepts number not strings)
             next();
         }
         else
