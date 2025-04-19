@@ -11,8 +11,7 @@ authRouter.post("/signup", async (req, res) => {
 
     try {
         // 1. validation
-        signupValidation(req);
-
+        await signupValidation(req);
         const { firstName, lastName, email, password } = req.body;
 
         // 2. Encryption

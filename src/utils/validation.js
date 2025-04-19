@@ -1,12 +1,16 @@
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const User = require('../models/user');
 
-const signupValidation = (req) => {
+const signupValidation = async (req) => {
     const { firstName, lastName, email, password } = req.body;
     if (!firstName || !lastName)
-        throw new Error("Enter the name!!!");
+        throw new Error("Enter the name!!");
     else if (!email)
-        throw new Error("Enter the email!!!");
+        throw new Error("Enter the email!!");
+    const userAlreadyExists = await User.findOne({ email });
+    if (userAlreadyExists)
+        throw new Error("Email already exists!");
     else if (!validator.isEmail(email))
         throw new Error("Enter a valid email address!!!");
     else if (!password)

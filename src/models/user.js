@@ -11,7 +11,7 @@ const userSchema = new Schema({
         trim: true,
         minLength: 3,
         maxLength: 50,
-        required: true
+        required: false
     },
     lastName: {
         type: String,
@@ -23,9 +23,9 @@ const userSchema = new Schema({
         type: String,
         trim: true,
         lowercase: true,
-        unique: true,
+        unique: [true, 'Email already exists'],
         validate: [validator.isEmail, 'Please fill a valid email address'],
-        required: true
+        required: [true,'Enter the email']
     },
     gender: {
         type: String,
