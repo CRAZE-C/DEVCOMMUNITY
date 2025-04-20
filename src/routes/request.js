@@ -17,9 +17,6 @@ requestRouter.post('/request/:status/:toUserId', userAuth, async (req, res) => {
         if (!isToUserExists)
             return res.status(400).json({ message: "User not found" });
 
-        if (fromUserId.equals(toUserId))
-            throw new Error("You cannot send request to yourself!!");
-
         const connectionRequest = new ConnectionRequest({
             toUserId,
             fromUserId,

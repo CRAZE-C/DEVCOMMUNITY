@@ -14,12 +14,20 @@ const ConnectionRequestSchema = new Schema({
         type: String,
         require: true,
         enum: {
-            values: ["ignored","interested","accepted","rejected"],
+            values: ["ignored", "interested", "accepted", "rejected"],
             message: `{VALUE} status type is invalid!!`
         }
     },
 },
     { timestamps: true }
 );
+
+ConnectionRequestSchema.index({ fromUserId: 1, toUserId: 1 }); //compound index
+
+ConnectionRequestSchema.pre("save", function (next) {
+    if (this.fromUserId.equals(this.toUserId))
+        throw new Error("You cannot send request to yourself!!");
+    next();
+});
 
 module.exports = mongoose.model('ConnectionRequest', ConnectionRequestSchema);
