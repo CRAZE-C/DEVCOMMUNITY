@@ -3,16 +3,18 @@ const { connectDB } = require('./config/database');
 const cookieParser = require('cookie-parser');
 const app = express();
 
-const userRouter = require('./routes/user');
+const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/request');
 const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 
 app.use(express.json()); //middleware for converting json into JS object...
 app.use(cookieParser()); //middleware for parsing cookies
 
-app.use('/', userRouter);
+app.use('/', profileRouter);
 app.use('/', requestRouter);
 app.use('/', authRouter);
+app.use('/', userRouter);
 
 connectDB()
     .then(() => {
