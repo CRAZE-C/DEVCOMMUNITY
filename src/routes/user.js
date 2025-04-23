@@ -62,7 +62,7 @@ userRouter.get('/user/feed', userAuth, async (req, res) => {
             excludedUsers.add(req.fromUserId.toString());
             excludedUsers.add(req.toUserId.toString());
         });
-        console.log(excludedUsers)
+        
         const feedUsers = await User.find({
             _id: { $nin: Array.from(excludedUsers) }
         }).select(USER_SAFE_DATA).skip(skip).limit(limit);
