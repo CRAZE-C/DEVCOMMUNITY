@@ -2,6 +2,7 @@ const express = require('express');
 const authRouter = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const { userAuth } = require('../middleware/userAuth');
 const { loginAuth } = require('../middleware/loginAuth');
 const { signupValidation } = require('../utils/validation');
 
@@ -35,7 +36,9 @@ authRouter.post("/signup", async (req, res) => {
 
 authRouter.post('/login', loginAuth, async (req, res) => {
     try {
-        res.send("Login successful!!!");
+        res.json({
+            data: req.user
+        });
     }
     catch (err) {
         res.status(400).send("ERROR : " + err.message);

@@ -8,7 +8,7 @@ const userAuth = async (req, res, next) => {
         if (!token)
             throw new Error("Invalid token!!!");
         // verify the token
-        const decodedData = await jwt.verify(token, "DEV#Community"); 
+        const decodedData = jwt.verify(token, "DEV#Community"); 
         // destructuring _id from decodedData
         const { _id } = decodedData;
         //find the user with the decoded id

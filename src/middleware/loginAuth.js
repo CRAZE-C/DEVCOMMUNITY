@@ -16,6 +16,7 @@ const loginAuth = async (req, res, next) => {
             }
             // Add the token to the cookie and send it back to the user
             res.cookie('token', token, { expires: new Date(Date.now() + 3600000) }); //maxAge: 3600000(only accepts number not strings)
+            req.user = user;
             next();
         }
         else
