@@ -40,15 +40,10 @@ const userSchema = new Schema({
         min: 18,
         max:100,
     },
-    phoneNumber: {
-        type: String,
-        validate: [validator.isMobilePhone,"Enter a valid MobilePhone number!!!"]
-    },
     about: {
         type: String,
-        minLength: 10,
-        maxLength: 50,
-        default: "Add about yourself...",
+        minLength: 0,
+        maxLength: 300,
         trim: true
     },
     password: {
@@ -58,7 +53,6 @@ const userSchema = new Schema({
     },
     profilePicture: {
         type: String,
-        validate: [validator.isURL, "Please enter a valid URL!!!"],
         default: "https://imgs.search.brave.com/mDztPWayQWWrIPAy2Hm_FNfDjDVgayj73RTnUIZ15L0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzAyLzE1Lzg0LzQz/LzM2MF9GXzIxNTg0/NDMyNV90dFg5WWlJ/SXllYVI3TmU2RWFM/TGpNQW15NEd2UEM2/OS5qcGc",
     },
     skills: {
@@ -72,15 +66,6 @@ const userSchema = new Schema({
         set: function (value) {
             return value.map((item) => item.trim());
         }
-    },
-    dob: {
-        type: Date,
-    },
-    address: {
-        type: String,
-        default: "Add your address here...",
-        minLength: 10,
-        maxLength: 100
     },
     jobRole: {
         type: String,

@@ -20,7 +20,7 @@ const signupValidation = async (req) => {
 }
 
 const validateEditProfile = (req) => {
-    const allowedEditProfile = ["firstName", "lastName", "about", "profilePicture", "skills", "adress", "jobRole"];
+    const allowedEditProfile = ["firstName", "lastName", "about", "profilePicture", "skills","age","gender", "jobRole"];
     const isValid = Object.keys(req.body).every(key => allowedEditProfile.includes(key));
     return isValid;
 }

@@ -9,7 +9,7 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const cors = require('cors');
 
-app.use(express.json()); //middleware for converting json into JS object...
+app.use(express.json({ limit: '1mb' })); //middleware for converting json into JS object...
 app.use(cookieParser()); //middleware for parsing cookies
 app.use(
     cors({
@@ -29,5 +29,5 @@ connectDB()
         app.listen(1010, console.log("Server is successfully listening on port 1010"));
     })
     .catch((err) => {
-        console.log("Database connection failed!!!" + err.message);
+        console.log("Database connection failed!!!" );
     });
