@@ -42,7 +42,7 @@ userRouter.get('/user/connections', userAuth, async (req, res) => {
         return row.fromUserId;
     })
 
-    res.status(200).json({ message: data });
+    res.status(200).json({ data: data });
 });
 
 userRouter.get('/user/feed', userAuth, async (req, res) => {

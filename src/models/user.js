@@ -30,7 +30,7 @@ const userSchema = new Schema({
     gender: {
         type: String,
         validate(value) {
-            if (!["male", "female", "other"].includes(value)) {
+            if (!["","Male", "Female", "Others"].includes(value)) {
                 throw new Error('Invalid gender');
             }
         }
