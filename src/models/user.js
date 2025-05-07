@@ -44,6 +44,7 @@ const userSchema = new Schema({
         type: String,
         minLength: 0,
         maxLength: 300,
+        default: "Add about yourself...",
         trim: true
     },
     password: {
