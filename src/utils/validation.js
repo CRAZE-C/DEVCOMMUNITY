@@ -26,8 +26,8 @@ const validateEditProfile = (req) => {
 }
 
 const validatePassword = async (req,user) => {
-    const { oldPassword, newPassword } = req.body;
-    const isValidOldPassword = await bcrypt.compare(oldPassword, user.password);
+    const { password, newPassword } = req.body;
+    const isValidOldPassword = await bcrypt.compare(password, user.password);
     if (!isValidOldPassword)
         throw new Error("Invalid old password");
     if (!validator.isStrongPassword(newPassword))
