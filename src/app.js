@@ -13,7 +13,7 @@ app.use(express.json({ limit: '1mb' })); //middleware for converting json into 
 app.use(cookieParser()); //middleware for parsing cookies
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173", "https://66wf1vgr-5173.inc1.devtunnels.ms"],
         credentials: true
     })
 ); //middleware to handle CORS...
