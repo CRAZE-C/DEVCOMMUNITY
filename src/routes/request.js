@@ -36,7 +36,6 @@ requestRouter.post('/request/:status/:toUserId', userAuth, async (req, res) => {
         const data = await connectionRequest.save();
 
         const email = await SendEmail.run();
-        console.log(email);
 
         res.status(200).send({
             message: 'Status ' + status + ' sent successfully to ' + isToUserExists.firstName,
