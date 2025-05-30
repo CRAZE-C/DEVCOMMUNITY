@@ -8,7 +8,7 @@ const userAuth = async (req, res, next) => {
         if (!token)
             return res.status(401).send("Login to access the page!!!");
         // verify the token
-        const decodedData = jwt.verify(token, "DEV#Community");
+        const decodedData = jwt.verify(token, process.env.secretOrPrivateKey);
         // destructuring _id from decodedData
         const { _id } = decodedData;
         //find the user with the decoded id

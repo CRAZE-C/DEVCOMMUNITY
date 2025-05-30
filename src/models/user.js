@@ -25,12 +25,12 @@ const userSchema = new Schema({
         lowercase: true,
         unique: [true, 'Email already exists'],
         validate: [validator.isEmail, 'Please fill a valid email address'],
-        required: [true,'Enter the email']
+        required: [true, 'Enter the email']
     },
     gender: {
         type: String,
         validate(value) {
-            if (!["","Male", "Female", "Others"].includes(value)) {
+            if (!["", "Male", "Female", "Others"].includes(value)) {
                 throw new Error('Invalid gender');
             }
         }
@@ -38,7 +38,7 @@ const userSchema = new Schema({
     age: {
         type: Number,
         min: 18,
-        max:100,
+        max: 100,
     },
     about: {
         type: String,
@@ -73,12 +73,12 @@ const userSchema = new Schema({
         default: "Add your jobRole here...",
         maxLength: 50
     }
-},{
+}, {
     timestamps: true
 });
 
 userSchema.methods.getJWT = function () {
-    return jwt.sign({ _id: this._id }, "DEV#Community", { expiresIn:'7d'});
+    return jwt.sign({ _id: this._id }, process.env.secretOrPrivateKey, { expiresIn: '7d' });
 }
 
 userSchema.methods.validatePassword = async function (passwordInputByUser) {

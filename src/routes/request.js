@@ -3,6 +3,7 @@ const requestRouter = express.Router();
 const { userAuth } = require('../middleware/userAuth');
 const User = require('../models/user');
 const ConnectionRequest = require('../models/connectionRequest');
+const SendEmail = require('../utils/sendEmail');
 
 requestRouter.post('/request/:status/:toUserId', userAuth, async (req, res) => {
     try {
@@ -33,6 +34,10 @@ requestRouter.post('/request/:status/:toUserId', userAuth, async (req, res) => {
         }
 
         const data = await connectionRequest.save();
+
+        const email = await SendEmail.run();
+        console.log(email);
+
         res.status(200).send({
             message: 'Status ' + status + ' sent successfully to ' + isToUserExists.firstName,
             data
